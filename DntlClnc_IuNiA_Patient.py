@@ -32,3 +32,4 @@ class Patient:
                         #(self.firstname, self.lastname, self.birthdate, self.cnp, self.address_country, self.address_city, self.address_street, self.occupation))
         con.close()
         print ("un nou pacient *" + self.firstname + " " + self.lastname + "* a fost adaugat")
+        #asa da
