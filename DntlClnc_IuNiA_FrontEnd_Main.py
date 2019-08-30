@@ -8,10 +8,6 @@ import subprocess
 from DntlClnc_IuNiA_Login import Login
 from DntlClnc_IuNiA_Patient import Patient
 import sqlite3 as sqlite
-from matplotlib import *
-import matplotlib.pyplot as plt
-import numpy as np
-
 
 
 class GUI(tk.Tk):
@@ -227,15 +223,27 @@ class Tab_Patient(Frame):
         Frame.__init__(self, master)
         self._label_1 = Label(self, text="Enter Firstname").grid(row=0)
         self._label_2 = Label(self, text="Enter Lastname").grid(row=1)
+        self._label_2 = Label(self, text="Enter CNP").grid(row=2)
         self._textbox_firstname_patient = tk.Entry(self, width=40)
         self._textbox_lastname_patient = tk.Entry(self, width=40)
+        self._textbox_cnp_patient = tk.Entry(self, width=40)
         self._textbox_firstname_patient.grid(row=0, column=1)
         self._textbox_lastname_patient.grid(row=1, column=1)
+        self._textbox_cnp_patient.grid(row=2, column=1)
         patient_new = Patient("", "", "", "", "", "", "", "")
-        self._button_add_patient = Button(self, text="Add patient", command=lambda: patient_new.add_patient_in_database(Entry.get(self._textbox_firstname_patient), Entry.get(self._textbox_lastname_patient), "da", "nu", "da", "nu", "da", "nu"), bg="#E3F6CE", fg="blue")
-        self._button_add_patient.grid(row=2, column=1)
+        self._button_add_patient = Button(self, text="Add patient", command=lambda: patient_new.add_patient_in_database(Entry.get(self._textbox_firstname_patient), Entry.get(self._textbox_lastname_patient), "da", Entry.get(self._textbox_cnp_patient), "da", "nu", "da", "nu"), bg="#E3F6CE", fg="blue")
+        self._button_add_patient.grid(row=4, column=1)
+        self._button_delete_all_patients = Button(self, text="Delete All Patients", command=self.delete_all_patients_in_database, bg="#E3F6CE", fg="blue")
+        self._button_delete_all_patients.grid(row=4, column=2)
         self.pack()
 
+    def delete_all_patients_in_database(self):
+        con = sqlite.connect('test.db')
+        with con:
+            cur = con.cursor()
+            cur.execute("DELETE FROM patient_table_good2 WHERE cnp='1' ")
+        con.close()
+        print ("toti pacientii cu cnp invalid au fost stersi")
 
 # Notebook - Tab 3
 class Tab_Appointment(Frame):
@@ -248,8 +256,39 @@ class Tab_Appointment(Frame):
 class Tab_Statistic(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.label = Label(self, text="this is a test - four")
-        self.label.pack()
+        self._button_add_patient = Button(self, text="See nr patients/year", command=self.show_patient_per_year_from_database, bg="#E3F6CE", fg="blue")
+        self._button_add_patient.grid(row=2, column=1)
+        self.pack()
+
+    def show_patient_per_year_from_database(self):
+        year_local_array = []
+        con = sqlite.connect('test.db')
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT cnp FROM patient_table_good2")
+
+            rows = cur.fetchall()
+
+            for row in rows:
+                cnp_local = row[0]
+                if ((int(cnp_local[1])*10) + int(cnp_local[2])) >= 30:
+                    year_local = 1900 + (int(cnp_local[1])*10) + int(cnp_local[2])
+                if int(cnp_local[1]) == 0:
+                    year_local = 2000 + int(cnp_local[2])
+                if (((int(cnp_local[1]) * 10) + int(cnp_local[2])) >= 10) & (((int(cnp_local[1]) * 10) + int(cnp_local[2])) < 30):
+                    year_local = 2000 + (int(cnp_local[1])*10) + int(cnp_local[2])
+                print (year_local)
+                year_local_array.append(year_local)
+
+
+        con.close()
+
+        year_local_array.sort()
+        print(year_local_array)
+        for item in year_local_array:
+            if item == item + 1:
+                tuple_nr_per_year = {}
+
 
 
 class Tab_Logout(Frame):
@@ -386,10 +425,11 @@ if __name__ == '__main__':
     #app_login_initial = GuiLoginWindow()
     #app_login_initial.mainloop()
     app = GUI()
-    app.geometry("900x480")
+    app.geometry("640x480")
     app.title = "Main Application"
     app.mainloop()
 
     afiseaza_database_content()
+
 
 
