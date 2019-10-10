@@ -7,8 +7,12 @@ import os.path
 import subprocess
 from DntlClnc_IuNiA_Login import Login
 from DntlClnc_IuNiA_Patient import Patient
+from DntlClnc_IuNiA_Appointment import Appointment
 import sqlite3 as sqlite
 
+#import matplotlib.pyplot as plt
+#from matplotlib.collections import EventCollection
+#import numpy as np
 
 class GUI(tk.Tk):
     def __init__(self):
@@ -215,26 +219,36 @@ class Tab_Patient_fake(Frame):
 # Notebook - Tab 2
 class Tab_Patient(Frame):
 
-    unique_id_computed = 0
-    firstname_patient = ""
-    lastname_patient = ""
-
     def __init__(self, master):
         Frame.__init__(self, master)
         self._label_1 = Label(self, text="Enter Firstname").grid(row=0)
         self._label_2 = Label(self, text="Enter Lastname").grid(row=1)
         self._label_2 = Label(self, text="Enter CNP").grid(row=2)
+        self._label_2 = Label(self, text="Enter Country").grid(row=3)
+        self._label_2 = Label(self, text="Enter City").grid(row=4)
+        self._label_2 = Label(self, text="Enter Street").grid(row=5)
+        self._label_2 = Label(self, text="Enter Occupation").grid(row=6)
         self._textbox_firstname_patient = tk.Entry(self, width=40)
         self._textbox_lastname_patient = tk.Entry(self, width=40)
         self._textbox_cnp_patient = tk.Entry(self, width=40)
+        self._textbox_country_patient = tk.Entry(self, width=40)
+        self._textbox_city_patient = tk.Entry(self, width=40)
+        self._textbox_street_patient = tk.Entry(self, width=40)
+        self._textbox_occupation_patient = tk.Entry(self, width=40)
         self._textbox_firstname_patient.grid(row=0, column=1)
         self._textbox_lastname_patient.grid(row=1, column=1)
         self._textbox_cnp_patient.grid(row=2, column=1)
-        patient_new = Patient("", "", "", "", "", "", "", "")
-        self._button_add_patient = Button(self, text="Add patient", command=lambda: patient_new.add_patient_in_database(Entry.get(self._textbox_firstname_patient), Entry.get(self._textbox_lastname_patient), "da", Entry.get(self._textbox_cnp_patient), "da", "nu", "da", "nu"), bg="#E3F6CE", fg="blue")
-        self._button_add_patient.grid(row=4, column=1)
+        self._textbox_country_patient.grid(row=3, column=1)
+        self._textbox_city_patient.grid(row=4, column=1)
+        self._textbox_street_patient.grid(row=5, column=1)
+        self._textbox_occupation_patient.grid(row=6, column=1)
+        patient_new = Patient("", "", "", "", "", "", "")
+        self._button_add_patient = Button(self, text="Add patient", command=lambda: patient_new.add_patient_in_database(Entry.get(self._textbox_firstname_patient), Entry.get(self._textbox_lastname_patient), Entry.get(self._textbox_cnp_patient), Entry.get(self._textbox_country_patient), Entry.get(self._textbox_city_patient), Entry.get(self._textbox_street_patient), Entry.get(self._textbox_occupation_patient)), bg="#E3F6CE", fg="blue")
+        self._button_add_patient.grid(row=7, column=1)
         self._button_delete_all_patients = Button(self, text="Delete All Patients", command=self.delete_all_patients_in_database, bg="#E3F6CE", fg="blue")
-        self._button_delete_all_patients.grid(row=4, column=2)
+        self._button_delete_all_patients.grid(row=1, column=2)
+        self._button_delete_all_patients = Button(self, text="Add 10 Random Patients", command=self.add_10_random_patients_in_database, bg="#E3F6CE", fg="blue")
+        self._button_delete_all_patients.grid(row=2, column=2)
         self.pack()
 
     def delete_all_patients_in_database(self):
@@ -245,12 +259,48 @@ class Tab_Patient(Frame):
         con.close()
         print ("toti pacientii cu cnp invalid au fost stersi")
 
+    def add_10_random_patients_in_database(self):
+        con = sqlite.connect('test.db')
+        with con:
+            cur = con.cursor()
+            for i in range(10):
+                firstname = 'gogu' + str(i)
+                lastname = 'preda'
+                cnp = '188090822435' + str(i)
+                address_country = 'Romania'
+                address_city = 'Iasi'
+                address_street = 'Tabacului'
+                occupation = 'Programmer'
+                cur.execute("INSERT INTO patient_table_good3(firstname, lastname, cnp, address_country, address_city, address_street, occupation) values(?, ?, ?, ?, ?, ?, ?)",
+                            (firstname, lastname, cnp, address_country, address_city, address_street, occupation))
+                print ("un nou pacient *" + firstname + " " + lastname + "* a fost adaugat")
+        con.close()
+
+
 # Notebook - Tab 3
 class Tab_Appointment(Frame):
+
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.label = Label(self, text="this is a test - three")
-        self.label.pack()
+        self._label_1 = Label(self, text="Enter Firstname").grid(row=0)
+        self._label_2 = Label(self, text="Enter Lastname").grid(row=1)
+        self._label_2 = Label(self, text="Enter Appintment Day").grid(row=3)
+        self._label_2 = Label(self, text="Enter Start Hour").grid(row=4)
+        self._label_2 = Label(self, text="Enter Stop Hour").grid(row=5)
+        self._textbox_firstname_appointment = tk.Entry(self, width=40)
+        self._textbox_lastname_appointment = tk.Entry(self, width=40)
+        self._textbox_day_appointment = tk.Entry(self, width=40)
+        self._textbox_start_hour_appointment = tk.Entry(self, width=40)
+        self._textbox_stop_hour_appointment = tk.Entry(self, width=40)
+        self._textbox_firstname_appointment.grid(row=0, column=1)
+        self._textbox_lastname_appointment.grid(row=1, column=1)
+        self._textbox_day_appointment.grid(row=2, column=1)
+        self._textbox_start_hour_appointment.grid(row=3, column=1)
+        self._textbox_stop_hour_appointment.grid(row=4, column=1)
+        appointment_new = Appointment("", "", "", "", "")
+        self._button_add_appointment = Button(self, text="Add Appointment", command=lambda: appointment_new.add_appointment_in_database(Entry.get(self._textbox_firstname_appointment), Entry.get(self._textbox_lastname_appointment), Entry.get(self._textbox_day_appointment), Entry.get(self._textbox_start_hour_appointment), Entry.get(self._textbox_stop_hour_appointment)), bg="#E3F6CE", fg="blue")
+        self._button_add_appointment.grid(row=7, column=1)
+        self.pack()
 
 
 class Tab_Statistic(Frame):
@@ -260,34 +310,45 @@ class Tab_Statistic(Frame):
         self._button_add_patient.grid(row=2, column=1)
         self.pack()
 
+    def get_year_of_birth_patient_per_country(self, cnp, country):
+        year_local = 0
+        if country.find('Romania') != -1:
+            if ((int(cnp[1]) * 10) + int(cnp[2])) >= 30:
+                year_local = 1900 + (int(cnp[1]) * 10) + int(cnp[2])
+            if int(cnp[1]) == 0:
+                year_local = 2000 + int(cnp[2])
+            if (((int(cnp[1]) * 10) + int(cnp[2])) >= 10) & (((int(cnp[1]) * 10) + int(cnp[2])) < 30):
+                year_local = 2000 + (int(cnp[1]) * 10) + int(cnp[2])
+        return year_local
+
     def show_patient_per_year_from_database(self):
         year_local_array = []
+        year_local = 0
         con = sqlite.connect('test.db')
         with con:
             cur = con.cursor()
-            cur.execute("SELECT cnp FROM patient_table_good2")
-
+            cur.execute("SELECT cnp, address_country FROM patient_table_good3")
             rows = cur.fetchall()
-
+            # acuma iau toate cnp-urile la rand
             for row in rows:
                 cnp_local = row[0]
-                if ((int(cnp_local[1])*10) + int(cnp_local[2])) >= 30:
-                    year_local = 1900 + (int(cnp_local[1])*10) + int(cnp_local[2])
-                if int(cnp_local[1]) == 0:
-                    year_local = 2000 + int(cnp_local[2])
-                if (((int(cnp_local[1]) * 10) + int(cnp_local[2])) >= 10) & (((int(cnp_local[1]) * 10) + int(cnp_local[2])) < 30):
-                    year_local = 2000 + (int(cnp_local[1])*10) + int(cnp_local[2])
-                print (year_local)
+                country = row[1]
+                print("cnp este: ", cnp_local, " si country este: ", country)
+                year_local = self.get_year_of_birth_patient_per_country(cnp_local, country)
+                #print (year_local)
                 year_local_array.append(year_local)
-
 
         con.close()
 
         year_local_array.sort()
         print(year_local_array)
+        dictionar_pacient_per_an = {}
+        count_nr_patient_per_year = 1
         for item in year_local_array:
-            if item == item + 1:
-                tuple_nr_per_year = {}
+            nr_aparitii = year_local_array.count(item)
+            dictionar_pacient_per_an[item] = [nr_aparitii]
+
+        print(dictionar_pacient_per_an)
 
 
 
@@ -409,9 +470,9 @@ def afiseaza_database_content():
 
     with con:
         cur = con.cursor()
-        cur.execute('SELECT * FROM patient_table_good2')
+        cur.execute('SELECT * FROM patient_table_good3')
         rows = cur.fetchall()
-        print "continutul bazei de date *patient_table_good2* este --> \n"
+        print "continutul bazei de date *patient_table_good3* este --> \n"
         for row in rows:
             print row
     con.close()
