@@ -247,8 +247,11 @@ class Tab_Patient(Frame):
         self._button_add_patient.grid(row=7, column=1)
         self._button_delete_all_patients = Button(self, text="Delete All Patients", command=self.delete_all_patients_in_database, bg="#E3F6CE", fg="blue")
         self._button_delete_all_patients.grid(row=1, column=2)
-        self._button_delete_all_patients = Button(self, text="Add 10 Random Patients", command=self.add_10_random_patients_in_database, bg="#E3F6CE", fg="blue")
-        self._button_delete_all_patients.grid(row=2, column=2)
+        self._button_add_10_random_patients = Button(self, text="Add 10 Random Patients", command=self.add_10_random_patients_in_database, bg="#E3F6CE", fg="blue")
+        self._button_add_10_random_patients.grid(row=2, column=2)
+        self._button_delete_id47_patient = Button(self, text="Delete patient id=42", command=self.delete_patient_in_database_TEST, bg="#E3F6CE", fg="blue")
+        self._button_delete_id47_patient.grid(row=2, column=3)
+
         self.pack()
 
     def delete_all_patients_in_database(self):
@@ -277,6 +280,16 @@ class Tab_Patient(Frame):
         con.close()
 
 
+    def delete_patient_in_database_TEST(self):
+        con = sqlite.connect('test.db')
+        con.execute("PRAGMA foreign_keys = 1")
+        with con:
+            cur = con.cursor()
+            cur.execute("DELETE FROM patient_table_good3 WHERE id = ?", (42,))
+        con.close()
+        print ("un delete a fost facut in Patient DB --> linia cu id = 42 a fost stearsa")
+
+
 # Notebook - Tab 3
 class Tab_Appointment(Frame):
 
@@ -284,9 +297,9 @@ class Tab_Appointment(Frame):
         Frame.__init__(self, master)
         self._label_1 = Label(self, text="Enter Firstname").grid(row=0)
         self._label_2 = Label(self, text="Enter Lastname").grid(row=1)
-        self._label_2 = Label(self, text="Enter Appintment Day").grid(row=3)
-        self._label_2 = Label(self, text="Enter Start Hour").grid(row=4)
-        self._label_2 = Label(self, text="Enter Stop Hour").grid(row=5)
+        self._label_2 = Label(self, text="Enter Appintment Day").grid(row=2)
+        self._label_2 = Label(self, text="Enter Start Hour").grid(row=3)
+        self._label_2 = Label(self, text="Enter Stop Hour").grid(row=4)
         self._textbox_firstname_appointment = tk.Entry(self, width=40)
         self._textbox_lastname_appointment = tk.Entry(self, width=40)
         self._textbox_day_appointment = tk.Entry(self, width=40)
@@ -300,6 +313,8 @@ class Tab_Appointment(Frame):
         appointment_new = Appointment("", "", "", "", "")
         self._button_add_appointment = Button(self, text="Add Appointment", command=lambda: appointment_new.add_appointment_in_database(Entry.get(self._textbox_firstname_appointment), Entry.get(self._textbox_lastname_appointment), Entry.get(self._textbox_day_appointment), Entry.get(self._textbox_start_hour_appointment), Entry.get(self._textbox_stop_hour_appointment)), bg="#E3F6CE", fg="blue")
         self._button_add_appointment.grid(row=7, column=1)
+        self._button_print_appointment = Button(self, text="Print Appointment DB", command=lambda: appointment_new.print_appointment_database(), bg="#E3F6CE", fg="blue")
+        self._button_print_appointment.grid(row=7, column=2)
         self.pack()
 
 
@@ -475,12 +490,21 @@ def afiseaza_database_content():
         print "continutul bazei de date *patient_table_good3* este --> \n"
         for row in rows:
             print row
+
+        cur = con.cursor()
+        cur.execute('SELECT * FROM appointment_table_good7')
+        rows = cur.fetchall()
+        print "continutul bazei de date *appointment_table_good7* este --> \n"
+        for row in rows:
+            print row
     con.close()
 
 
 #-------------------------------------------------------------------------------
 #------  Main function for whole application  ----------------------------------
 #-------------------------------------------------------------------------------
+
+
 if __name__ == '__main__':
 
     #app_login_initial = GuiLoginWindow()
