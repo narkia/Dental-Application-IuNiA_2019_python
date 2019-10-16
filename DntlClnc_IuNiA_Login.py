@@ -1,7 +1,7 @@
-import Tkinter
-from Tkinter import *
-import Tkinter as tk
-import tkMessageBox
+import tkinter
+from tkinter import *
+import tkinter as tk
+from tkinter import messagebox
 from datetime import date
 import os.path
 import subprocess
@@ -42,7 +42,7 @@ class Login:
         return_var = 0
         for x, y in dictionar_1.items():
             if self.id == x and self.pas == y:
-                print "Login success!"
+                print("Login success!")
                 return_var = 1
                 break
             else:
@@ -52,16 +52,16 @@ class Login:
     def check_password_too_old(self, id, pas, dictionar_1, dictionar_2):
         for x, y in dictionar_1.items():
             if self.id == x and self.pas == y:
-                print "Login sfarsit cu success! Acum verificam daca parola e prea veche si trebuie schimbata..."
+                print("Login sfarsit cu success! Acum verificam daca parola e prea veche si trebuie schimbata...")
                 username_plus_parola = x+"_"+y
                 for xx, yy in dictionar_2.items():
                     if username_plus_parola == xx:
                         data_cont = yy
                         if data_cont != str(date.today()):
-                            tkMessageBox.showwarning("Warning","parola cam veche, tre sa o schimbi!!!")
+                            messagebox.showwarning("Warning","parola cam veche, tre sa o schimbi!!!")
                             break
                         else:
-                            tkMessageBox.showinfo("Info","parola ok, am verificat doar valabilitatea ;) ")
+                            messagebox.showinfo("Info","parola ok, am verificat doar valabilitatea ;) ")
                             break
 
 

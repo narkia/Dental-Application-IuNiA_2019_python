@@ -1,7 +1,7 @@
-import Tkinter
-from Tkinter import *
-import Tkinter as tk
-import tkMessageBox
+import tkinter
+from tkinter import *
+import tkinter as tk
+from tkinter import messagebox
 from datetime import date
 import os.path
 import subprocess

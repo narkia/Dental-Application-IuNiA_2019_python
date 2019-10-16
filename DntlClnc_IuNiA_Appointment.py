@@ -1,7 +1,7 @@
-import Tkinter
-from Tkinter import *
-import Tkinter as tk
-import tkMessageBox
+import tkinter
+from tkinter import *
+import tkinter as tk
+from tkinter import messagebox
 from datetime import date
 import os.path
 import subprocess
@@ -21,6 +21,7 @@ class Appointment:
     def add_appointment_in_database(self, firstname, lastname, appointment_day, start_hour, stop_hour):
         con = sqlite.connect('test.db')
         con.execute("PRAGMA foreign_keys = 1")
+        patient_id_local = []
         with con:
 
             cur1 = con.cursor()
@@ -45,7 +46,7 @@ class Appointment:
             cur = con.cursor()
             cur.execute('SELECT * FROM appointment_table_good7')
             rows = cur.fetchall()
-            print "continutul bazei de date *appointment_table_good6* este --> \n"
+            print("continutul bazei de date *appointment_table_good6* este --> \n")
             for row in rows:
-                print row
+                print(row)
         con.close()

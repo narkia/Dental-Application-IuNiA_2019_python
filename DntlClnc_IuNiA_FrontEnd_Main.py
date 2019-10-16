@@ -1,7 +1,7 @@
-from Tkinter import *
-import ttk
-import Tkinter as tk
-import tkMessageBox
+from tkinter import *
+from tkinter import ttk
+import tkinter as tk
+from tkinter import messagebox
 from datetime import date
 import os.path
 import subprocess
@@ -153,7 +153,7 @@ class Tab_Login(Frame):
                 app.switch_frame(NoteBook_real)
 
             else:
-                print "Login failed!!"
+                print("Login failed!!")
                 if self.counter_login_tries == 3:
                     self._textbox_1.delete(0, END)
                     self._textbox_2.delete(0, END)
@@ -457,7 +457,7 @@ class GuiLoginWindow(tk.Tk):
             if return_check == 1:
                 app_login_initial.quit()
             else:
-                print "Login failed!!"
+                print("Login failed!!")
                 if self.counter_login_tries == 3:
                     app_login_initial._textbox_1.delete(0, END)
                     app_login_initial._textbox_2.delete(0, END)
@@ -468,7 +468,7 @@ class GuiLoginWindow(tk.Tk):
                 else:
                     self.counter_login_tries += 1
         else:
-            tkMessageBox.showerror("Eroare", "Nu exista nici un cont in database. Sign Up first!!")
+            messagebox.showerror("Eroare", "Nu exista nici un cont in database. Sign Up first!!")
 
 
     def func_signup_login(self):
@@ -487,16 +487,16 @@ def afiseaza_database_content():
         cur = con.cursor()
         cur.execute('SELECT * FROM patient_table_good3')
         rows = cur.fetchall()
-        print "continutul bazei de date *patient_table_good3* este --> \n"
+        print("continutul bazei de date *patient_table_good3* este --> \n")
         for row in rows:
-            print row
+            print(row)
 
         cur = con.cursor()
         cur.execute('SELECT * FROM appointment_table_good7')
         rows = cur.fetchall()
-        print "continutul bazei de date *appointment_table_good7* este --> \n"
+        print("continutul bazei de date *appointment_table_good7* este --> \n")
         for row in rows:
-            print row
+            print(row)
     con.close()
 
 
