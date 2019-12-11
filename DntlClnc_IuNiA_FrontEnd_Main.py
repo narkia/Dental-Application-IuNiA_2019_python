@@ -3,11 +3,13 @@ from tkinter import ttk
 import tkinter as tk
 from tkinter import messagebox
 from datetime import date
+import datetime
 import os.path
 import subprocess
 from DntlClnc_IuNiA_Login import Login
 from DntlClnc_IuNiA_Patient import Patient
 from DntlClnc_IuNiA_Appointment import Appointment
+from DntlClnc_IuNiA_Treatment import Treatment
 import sqlite3 as sqlite
 
 #import matplotlib.pyplot as plt
@@ -49,19 +51,22 @@ class NoteBook(Frame):
         self._tab1 = Tab_Main(self._notebook)
         self._tab2 = Tab_Patient_fake(self._notebook)
         self._tab3 = Tab_Appointment(self._notebook)
-        self._tab4 = Tab_Statistic(self._notebook)
-        self._tab5 = Tab_Logout(self._notebook)
-        self._notebook.add(self._tab0, text="Login Window")
+        self._tab4 = Tab_Treatment(self._notebook)
+        self._tab5 = Tab_Statistic(self._notebook)
+        self._tab6 = Tab_Logout(self._notebook)
+        self._notebook.add(self._tab0, text="Login")
         self._notebook.add(self._tab1, text="Main Window")
-        self._notebook.add(self._tab2, text="Patient Window")
-        self._notebook.add(self._tab3, text="Appointment Window")
-        self._notebook.add(self._tab4, text="Statistics Window")
-        self._notebook.add(self._tab5, text="Logout Window")
+        self._notebook.add(self._tab2, text="Patient Win")
+        self._notebook.add(self._tab3, text="Appointment Win")
+        self._notebook.add(self._tab4, text="Treatment Win")
+        self._notebook.add(self._tab5, text="Statistics")
+        self._notebook.add(self._tab6, text="Logout")
         self._notebook.tab(1, state="disabled")
         self._notebook.tab(2, state="disabled")
         self._notebook.tab(3, state="disabled")
         self._notebook.tab(4, state="disabled")
         self._notebook.tab(5, state="disabled")
+        self._notebook.tab(6, state="disabled")
         self._notebook.pack()
 
 
@@ -91,14 +96,16 @@ class NoteBook_real(Frame):
         self._tab1 = Tab_Main(self._notebook)
         self._tab2 = Tab_Patient(self._notebook)
         self._tab3 = Tab_Appointment(self._notebook)
-        self._tab4 = Tab_Statistic(self._notebook)
-        self._tab5 = Tab_Logout(self._notebook)
-        self._notebook.add(self._tab0, text="Login Window")
+        self._tab4 = Tab_Treatment(self._notebook)
+        self._tab5 = Tab_Statistic(self._notebook)
+        self._tab6 = Tab_Logout(self._notebook)
+        self._notebook.add(self._tab0, text="Login")
         self._notebook.add(self._tab1, text="Main Window")
-        self._notebook.add(self._tab2, text="Patient Window")
-        self._notebook.add(self._tab3, text="Appointment Window")
-        self._notebook.add(self._tab4, text="Statistics Window")
-        self._notebook.add(self._tab5, text="Logout Window")
+        self._notebook.add(self._tab2, text="Patient Win")
+        self._notebook.add(self._tab3, text="Appointment Win")
+        self._notebook.add(self._tab4, text="Treatment Win")
+        self._notebook.add(self._tab5, text="Statistics")
+        self._notebook.add(self._tab6, text="Logout")
         self._notebook.tab(0, state="disabled")
         self._notebook.pack()
 
@@ -251,8 +258,11 @@ class Tab_Patient(Frame):
         self._button_add_10_random_patients.grid(row=2, column=2)
         self._button_delete_id47_patient = Button(self, text="Delete patient id=42", command=self.delete_patient_in_database_TEST, bg="#E3F6CE", fg="blue")
         self._button_delete_id47_patient.grid(row=2, column=3)
+        self._button_show_all_patients = Button(self, text="Show all patients", command=afiseaza_database_content, bg="#E3F6CE", fg="blue")
+        self._button_show_all_patients.grid(row=3, column=3)
 
         self.pack()
+
 
     def delete_all_patients_in_database(self):
         con = sqlite.connect('test.db')
@@ -285,9 +295,9 @@ class Tab_Patient(Frame):
         con.execute("PRAGMA foreign_keys = 1")
         with con:
             cur = con.cursor()
-            cur.execute("DELETE FROM patient_table_good3 WHERE id = ?", (42,))
+            cur.execute("DELETE FROM patient_table_good3 WHERE id = ?", (81,))
         con.close()
-        print ("un delete a fost facut in Patient DB --> linia cu id = 42 a fost stearsa")
+        print ("un delete a fost facut in Patient DB --> linia cu id = 81 a fost stearsa")
 
 
 # Notebook - Tab 3
@@ -318,12 +328,56 @@ class Tab_Appointment(Frame):
         self.pack()
 
 
+class Tab_Treatment(Frame):
+    def __init__(self, master):
+        Frame.__init__(self, master)
+        self._label_1 = Label(self, text="Enter New Treatment Name").grid(row=0)
+        self._textbox_treatment_name = tk.Entry(self, width=40)
+        self._textbox_treatment_name.grid(row=0, column=1)
+        self._label_1 = Label(self, text="Enter New Treatment Cost").grid(row=1)
+        self._textbox_treatment_cost = tk.Entry(self, width=40)
+        self._textbox_treatment_cost.grid(row=1, column=1)
+        appointment_new = Treatment("","")
+        self._button_add_treatment = Button(self, text="Add Treatment", command=lambda: appointment_new.add_treatment_in_database(Entry.get(self._textbox_treatment_name),Entry.get(self._textbox_treatment_cost)), bg="#E3F6CE", fg="blue")
+        self._button_add_treatment.grid(row=0, column=2)
+        self._button_show_treatments = Button(self, text="Show Treatments from DB", command=lambda: appointment_new.print_treatment_database(), bg="#E3F6CE", fg="blue")
+        self._button_show_treatments.grid(row=1, column=2)
+        self.pack()
+
+
 class Tab_Statistic(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self._button_add_patient = Button(self, text="See nr patients/year", command=self.show_patient_per_year_from_database, bg="#E3F6CE", fg="blue")
         self._button_add_patient.grid(row=2, column=1)
+        self._button_patients_ages_descending_order = Button(self, text="Descending age patients", command=self.show_patient_ages_descending_order_from_database, bg="#E3F6CE", fg="blue")
+        self._button_patients_ages_descending_order.grid(row=2, column=2)
         self.pack()
+
+    def show_patient_ages_descending_order_from_database(self):
+        lista_all_tuples_age_name_patient = []
+        con = sqlite.connect('test.db')
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT cnp, address_country, firstname, lastname FROM patient_table_good3")
+            rows = cur.fetchall()
+            for row in rows:
+                cnp_local = row[0]
+                country = row[1]
+                firstname = row[2]
+                lastname = row[3]
+                year_local = self.get_year_of_birth_patient_per_country(cnp_local, country)
+                now = datetime.datetime.now()
+                age_year_local = int(now.year) - year_local
+                nume = firstname + lastname
+                tuplu_age_name = (age_year_local, nume)
+                lista_all_tuples_age_name_patient.append(tuplu_age_name)
+        con.close()
+
+        lista_all_tuples_age_name_patient.sort(reverse=TRUE, key=lambda tup: tup[0])
+        for item in lista_all_tuples_age_name_patient:
+            print(item)
+
 
     def get_year_of_birth_patient_per_country(self, cnp, country):
         year_local = 0
