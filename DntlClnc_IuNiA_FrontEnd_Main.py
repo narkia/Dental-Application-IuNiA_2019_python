@@ -10,6 +10,7 @@ from DntlClnc_IuNiA_Login import Login
 from DntlClnc_IuNiA_Patient import Patient
 from DntlClnc_IuNiA_Appointment import Appointment
 from DntlClnc_IuNiA_Treatment import Treatment
+from DntlClnc_IuNiA_Treatment import TreatmentPlan
 import sqlite3 as sqlite
 
 #import matplotlib.pyplot as plt
@@ -337,11 +338,22 @@ class Tab_Treatment(Frame):
         self._label_1 = Label(self, text="Enter New Treatment Cost").grid(row=1)
         self._textbox_treatment_cost = tk.Entry(self, width=40)
         self._textbox_treatment_cost.grid(row=1, column=1)
-        appointment_new = Treatment("","")
-        self._button_add_treatment = Button(self, text="Add Treatment", command=lambda: appointment_new.add_treatment_in_database(Entry.get(self._textbox_treatment_name),Entry.get(self._textbox_treatment_cost)), bg="#E3F6CE", fg="blue")
+        treatment_new = Treatment("","")
+        self._button_add_treatment = Button(self, text="Add Treatment", command=lambda: treatment_new.add_treatment_in_database(Entry.get(self._textbox_treatment_name),Entry.get(self._textbox_treatment_cost)), bg="#E3F6CE", fg="blue")
         self._button_add_treatment.grid(row=0, column=2)
-        self._button_show_treatments = Button(self, text="Show Treatments from DB", command=lambda: appointment_new.print_treatment_database(), bg="#E3F6CE", fg="blue")
+        self._button_show_treatments = Button(self, text="Show Treatments from DB", command=lambda: treatment_new.print_treatment_database(), bg="#E3F6CE", fg="blue")
         self._button_show_treatments.grid(row=1, column=2)
+        treatmentPlan_new = TreatmentPlan("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "")
+        self._label_1 = Label(self, text="Patient Name for TreatmentPlan").grid(row=2)
+        self._textbox_patient_name_for_treatment_plan = tk.Entry(self, width=40)
+        self._textbox_patient_name_for_treatment_plan.grid(row=2, column=1)
+        self._label_1 = Label(self, text="Treatment Name for TreatmentPlan").grid(row=3)
+        self._textbox_treatment_name_for_treatment_plan = tk.Entry(self, width=40)
+        self._textbox_treatment_name_for_treatment_plan.grid(row=3, column=1)
+        self._button_add_treatmentsPlan = Button(self, text="Add TreatmentPlan", command=lambda: treatmentPlan_new.add_treatmentPlan_in_database(Entry.get(self._textbox_patient_name_for_treatment_plan), str("TreatmentPlan" + Entry.get(self._textbox_patient_name_for_treatment_plan)), Entry.get(self._textbox_treatment_name_for_treatment_plan), 1, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, 0, 0), bg="#E3F6CE", fg="blue")
+        self._button_add_treatmentsPlan.grid(row=4, column=2)
+        self._button_print_treatmentsPlan = Button(self, text="Print all TreatmentPlans", command=lambda: treatmentPlan_new.print_treatmentPlan_database())
+        self._button_print_treatmentsPlan.grid(row=5, column=2)
         self.pack()
 
 
