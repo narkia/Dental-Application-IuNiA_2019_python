@@ -6,12 +6,15 @@ from datetime import date
 import datetime
 import os.path
 import subprocess
+
+import DntlClnc_IuNiA_Patient as patient_file
 from DntlClnc_IuNiA_Login import Login
 from DntlClnc_IuNiA_Patient import Patient
 from DntlClnc_IuNiA_Appointment import Appointment
 from DntlClnc_IuNiA_Treatment import Treatment
 from DntlClnc_IuNiA_Treatment import TreatmentPlan
 import sqlite3 as sqlite
+
 
 #import matplotlib.pyplot as plt
 #from matplotlib.collections import EventCollection
@@ -135,10 +138,12 @@ class Tab_Login(Frame):
         self._textbox_2.grid(row=1, column=1)
         self._textbox_1.config(state=NORMAL)
         self._textbox_2.config(state=NORMAL)
+        self._textbox_1.insert(0, "asd")
+        self._textbox_2.insert(0, "dasd")
         self._button_login = tk.Button(self, text="Login", command=self.func_initial_login, bg="#E3F6CE", fg="blue")
         self._button_login.grid(row=2, column=1)
         self._button_signup = tk.Button(self, text="Sign Up", command=self.func_signup_login, bg="#E3F6CE")
-        self._button_signup.grid(row=0, column=3)
+        self._button_signup.grid(row=0, column=3, sticky=W, pady=2)
 #        self.label.pack()
 
 
@@ -227,22 +232,26 @@ class Tab_Patient_fake(Frame):
 # Notebook - Tab 2
 class Tab_Patient(Frame):
 
+    iiii = 10
+
     def __init__(self, master):
         Frame.__init__(self, master)
-        self._label_1 = Label(self, text="Enter Firstname").grid(row=0)
-        self._label_2 = Label(self, text="Enter Lastname").grid(row=1)
-        self._label_2 = Label(self, text="Enter CNP").grid(row=2)
-        self._label_2 = Label(self, text="Enter Country").grid(row=3)
-        self._label_2 = Label(self, text="Enter City").grid(row=4)
-        self._label_2 = Label(self, text="Enter Street").grid(row=5)
-        self._label_2 = Label(self, text="Enter Occupation").grid(row=6)
-        self._textbox_firstname_patient = tk.Entry(self, width=40)
-        self._textbox_lastname_patient = tk.Entry(self, width=40)
-        self._textbox_cnp_patient = tk.Entry(self, width=40)
-        self._textbox_country_patient = tk.Entry(self, width=40)
-        self._textbox_city_patient = tk.Entry(self, width=40)
-        self._textbox_street_patient = tk.Entry(self, width=40)
-        self._textbox_occupation_patient = tk.Entry(self, width=40)
+        labelFrame = LabelFrame(self, text = "Add New Patient")
+        labelFrame.grid(padx = 10, pady = 10)
+        self._label_1 = Label(labelFrame, text="Enter Firstname").grid(row=0)
+        self._label_2 = Label(labelFrame, text="Enter Lastname").grid(row=1)
+        self._label_2 = Label(labelFrame, text="Enter CNP").grid(row=2)
+        self._label_2 = Label(labelFrame, text="Enter Country").grid(row=3)
+        self._label_2 = Label(labelFrame, text="Enter City").grid(row=4)
+        self._label_2 = Label(labelFrame, text="Enter Street").grid(row=5)
+        self._label_2 = Label(labelFrame, text="Enter Occupation").grid(row=6)
+        self._textbox_firstname_patient = tk.Entry(labelFrame, width=40)
+        self._textbox_lastname_patient = tk.Entry(labelFrame, width=40)
+        self._textbox_cnp_patient = tk.Entry(labelFrame, width=40)
+        self._textbox_country_patient = tk.Entry(labelFrame, width=40)
+        self._textbox_city_patient = tk.Entry(labelFrame, width=40)
+        self._textbox_street_patient = tk.Entry(labelFrame, width=40)
+        self._textbox_occupation_patient = tk.Entry(labelFrame, width=40)
         self._textbox_firstname_patient.grid(row=0, column=1)
         self._textbox_lastname_patient.grid(row=1, column=1)
         self._textbox_cnp_patient.grid(row=2, column=1)
@@ -251,19 +260,127 @@ class Tab_Patient(Frame):
         self._textbox_street_patient.grid(row=5, column=1)
         self._textbox_occupation_patient.grid(row=6, column=1)
         patient_new = Patient("", "", "", "", "", "", "")
-        self._button_add_patient = Button(self, text="Add patient", command=lambda: patient_new.add_patient_in_database(Entry.get(self._textbox_firstname_patient), Entry.get(self._textbox_lastname_patient), Entry.get(self._textbox_cnp_patient), Entry.get(self._textbox_country_patient), Entry.get(self._textbox_city_patient), Entry.get(self._textbox_street_patient), Entry.get(self._textbox_occupation_patient)), bg="#E3F6CE", fg="blue")
-        self._button_add_patient.grid(row=7, column=1)
-        self._button_delete_all_patients = Button(self, text="Delete All Patients", command=self.delete_all_patients_in_database, bg="#E3F6CE", fg="blue")
+        self._button_add_patient = Button(labelFrame, text="Add patient", command=lambda: patient_new.add_patient_in_database(Entry.get(self._textbox_firstname_patient), Entry.get(self._textbox_lastname_patient), Entry.get(self._textbox_cnp_patient), Entry.get(self._textbox_country_patient), Entry.get(self._textbox_city_patient), Entry.get(self._textbox_street_patient), Entry.get(self._textbox_occupation_patient)), bg="#E3F6CE", fg="blue")
+        self._button_add_patient.grid(row=5, column=2)
+        self._button_delete_all_patients = Button(labelFrame, text="Delete All Patients", command=self.delete_all_patients_in_database, bg="#E3F6CE", fg="blue")
         self._button_delete_all_patients.grid(row=1, column=2)
-        self._button_add_10_random_patients = Button(self, text="Add 10 Random Patients", command=self.add_10_random_patients_in_database, bg="#E3F6CE", fg="blue")
+        self._button_add_10_random_patients = Button(labelFrame, text="Add 10 Random Patients", command=self.add_10_random_patients_in_database, bg="#E3F6CE", fg="blue")
         self._button_add_10_random_patients.grid(row=2, column=2)
-        self._button_delete_id47_patient = Button(self, text="Delete patient id=42", command=self.delete_patient_in_database_TEST, bg="#E3F6CE", fg="blue")
-        self._button_delete_id47_patient.grid(row=2, column=3)
-        self._button_show_all_patients = Button(self, text="Show all patients", command=afiseaza_database_content, bg="#E3F6CE", fg="blue")
-        self._button_show_all_patients.grid(row=3, column=3)
+        self._button_delete_id47_patient = Button(labelFrame, text="Delete patient id=42", command=self.delete_patient_in_database_TEST, bg="#E3F6CE", fg="blue")
+        self._button_delete_id47_patient.grid(row=3, column=2)
+        self._button_show_all_patients = Button(labelFrame, text="Show all patients", command=afiseaza_database_content, bg="#E3F6CE", fg="blue")
+        self._button_show_all_patients.grid(row=4, column=2)
 
+        #bt = ttk.Button(self, text='Add Row', command=self.add_row)
+        #bt.grid(row=8, column=0)
+
+        #dl = ttk.Button(self, text='Delete Row')
+        #dl.grid(row=8, column=1)
+
+        #v0 = StringVar()
+        #e0 = Entry(self, textvariable=v0, state='readonly')
+        #v0.set('Select')
+        #e0.grid(row=9, column=0)
+
+        #v1 = StringVar()
+        #e1 = Entry(self, textvariable=v1, state='readonly')
+        #v1.set('Col1')
+        #e1.grid(row=9, column=1)
+
+        #v2 = StringVar()
+        #e2 = Entry(self, textvariable=v2, state='readonly')
+        #v2.set('Col2')
+        #e2.grid(row=9, column=2)
+
+        #v3 = StringVar()
+        #e3 = Entry(self, textvariable=v3, state='readonly')
+        #v3.set('Col3')
+        #e3.grid(row=9, column=3)
+
+        #v4 = StringVar()
+        #e4 = Entry(self, textvariable=v4, state='readonly')
+        #v4.set('Col4')
+        #e4.grid(row=9, column=4)
+
+        sizex = 800
+        sizey = 600
+        posx = 100
+        posy = 100
+        #self.winfom_geometry("%dx%d+%d+%d" % (sizex, sizey, posx, posy))
+
+        labelFrame_SearchPatient = LabelFrame(self, text="Search Patient")
+        labelFrame_SearchPatient.grid(padx=50, pady=10)
+
+        sv = StringVar()
+        sv.trace("w", lambda name, index, mode, sv=sv: self.callback_search_when_typing(sv))
+        self._textbox_search_patient = tk.Entry(labelFrame_SearchPatient, textvariable=sv)
+        self._textbox_search_patient.grid(row=0, column=0)
+        #self._button_search_patient = Button(labelFrame_SearchPatient, text="Search patient", command=lambda:patient_new.search_patient_in_database(Entry.get(self._textbox_search_patient)), bg="#E3F6CE", fg="blue")
+        #self._button_search_patient.grid(row=0, column=1)
+        self._text_found_patients = tk.Text(labelFrame_SearchPatient, height=10, width=40)
+        self._text_found_patients.grid(row=1)
+
+        self._text_found_patients.tag_configure("tag", foreground="pink", background="green")
+        self._text_found_patients.tag_bind("tag", "<ButtonRelease-1>", self.callback_when_click_on_found_item)
+
+
+        #myframe = Frame(self, relief=GROOVE, width=200, height=100, bd=1)
+        #myframe.place(x=200, y=200)
+
+        canvas = Canvas(labelFrame_SearchPatient)
+        frame = Frame(canvas)
+        myscrollbar = Scrollbar(labelFrame_SearchPatient, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=myscrollbar.set)
+
+        #myscrollbar.pack(side="right", fill="y")
+        #canvas.pack(side="left")
+        canvas.create_window((0, 0), window=frame, anchor='nw')
+        frame.bind("<Configure>", self.myfunction(canvas))
         self.pack()
 
+    def callback_search_when_typing(self, sv):
+        #print(sv.get())
+        input = 0
+        input = sv.get()
+        patient_local_list = Patient.search_patient_in_database(Patient, input)
+        self._text_found_patients.delete('1.0', END)
+        if not patient_local_list:
+            self._text_found_patients.configure(state=NORMAL)
+            self._text_found_patients.delete('1.0', END)
+        else:
+            for item in patient_local_list:
+                self._text_found_patients.insert(END, item)
+                self._text_found_patients.insert(END, "\n")
+            self._text_found_patients.configure(state=DISABLED)
+
+
+    def callback_when_click_on_found_item(self, event):
+        #messagebox.showinfo("Title", "Ai dat click pe text")
+        self._text_found_patients.tag_add("tag", "1.0", END)
+        info_window = Tk()
+        info_window.overrideredirect(1)
+        info_window.geometry("200x24+{0}+{1}".format(event.x_root - 100, event.y_root - 12))
+
+        label = Label(info_window, text="Word definition goes here.")
+        label.pack(fill=BOTH)
+
+        info_window.bind_all("<Leave>", lambda e: info_window.destroy())  # Remove popup when pointer leaves the window
+        info_window.mainloop()
+
+
+    def myfunction(event,canvas):
+            canvas.configure(scrollregion=canvas.bbox("all"), width=200, height=200)
+
+
+    def add_row(self):
+
+        var = IntVar()
+        c = Checkbutton(self, variable=var)
+        c.grid(row=self.iiii, column=0)
+        for j in range(1, 5):  # Columns
+            b = Entry(self)
+            b.grid(row=self.iiii, column=j)
+        self.iiii = self.iiii + 1
 
     def delete_all_patients_in_database(self):
         con = sqlite.connect('test.db')
@@ -348,8 +465,13 @@ class Tab_Treatment(Frame):
         self._textbox_patient_name_for_treatment_plan = tk.Entry(self, width=40)
         self._textbox_patient_name_for_treatment_plan.grid(row=2, column=1)
         self._label_1 = Label(self, text="Treatment Name for TreatmentPlan").grid(row=3)
+        self._textbox_patient_name_for_treatment_plan.insert(0,"Negru Ovidiu")
         self._textbox_treatment_name_for_treatment_plan = tk.Entry(self, width=40)
         self._textbox_treatment_name_for_treatment_plan.grid(row=3, column=1)
+        self._textbox_treatment_name_for_treatment_plan.insert(0,"implant")
+        self._textbox_treatment_name_for_treatment_plan1 = tk.Entry(self, width=40)
+        self._textbox_treatment_name_for_treatment_plan1.grid(row=4, column=1)
+        self._textbox_treatment_name_for_treatment_plan1.insert(0,"extractie")
         self._button_add_treatmentsPlan = Button(self, text="Add TreatmentPlan", command=lambda: treatmentPlan_new.add_treatmentPlan_in_database(Entry.get(self._textbox_patient_name_for_treatment_plan), str("TreatmentPlan" + Entry.get(self._textbox_patient_name_for_treatment_plan)), Entry.get(self._textbox_treatment_name_for_treatment_plan), 1, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, "-", 0, 0, 0), bg="#E3F6CE", fg="blue")
         self._button_add_treatmentsPlan.grid(row=4, column=2)
         self._button_print_treatmentsPlan = Button(self, text="Print all TreatmentPlans", command=lambda: treatmentPlan_new.print_treatmentPlan_database())

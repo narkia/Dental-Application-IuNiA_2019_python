@@ -26,9 +26,27 @@ class Patient:
         with con:
             cur = con.cursor()
             cur.execute("CREATE TABLE IF NOT EXISTS patient_table_good3(id INTEGER NOT NULL PRIMARY KEY, firstname TEXT, lastname TEXT, cnp TEXT, address_country TEXT, address_city TEXT, address_street TEXT, occupation TEXT)")
-            cur.execute("INSERT INTO patient_table_good2(firstname, lastname, cnp, address_country, address_city, address_street, occupation) values(?, ?, ?, ?, ?, ?, ?)",
+            cur.execute("INSERT INTO patient_table_good3(firstname, lastname, cnp, address_country, address_city, address_street, occupation) values(?, ?, ?, ?, ?, ?, ?)",
                         (firstname, lastname, cnp, address_country, address_city, address_street, occupation))
         con.close()
-        print ("un nou pacient *" + self.firstname + " " + self.lastname + "* a fost adaugat")
+        print("un nou pacient *" + self.firstname + " " + self.lastname + "* a fost adaugat")
 
 
+    def search_patient_in_database(self, input):
+        patient_local_list = []
+        con = sqlite.connect('test.db')
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT firstname, lastname from patient_table_good3 WHERE firstname LIKE ? OR lastname LIKE ?",(input, input))
+            #cur.execute("SELECT firstname, lastname from patient_table_good3 WHERE firstname.letter LIKE ? OR lastname.letter LIKE ?", (input, input))
+            rows = cur.fetchall()
+            for patient_local in rows:
+                patient_local_list.append(patient_local[0] +" "+ patient_local[1])
+        con.close()
+
+        for item in patient_local_list:
+            print(item)
+
+        if not patient_local_list:
+            print("nu s-a gasit nici un pacient care sa se numeasca ->", input)
+        return patient_local_list
