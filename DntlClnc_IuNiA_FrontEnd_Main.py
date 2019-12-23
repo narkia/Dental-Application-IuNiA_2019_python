@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import tkinter as tk
+from tkinter import font
 from tkinter import messagebox
 from datetime import date
 import datetime
@@ -338,7 +339,19 @@ class Tab_Patient(Frame):
             #self._ListBox_SearchPatient.delete(0,END)
         else:
             for item in patient_local_list:
+                #item.configure(font=("Times New Roman", 12, "bold"))
+                #f = tk.font(font=item.cget(input))
+                #f.configure(underline=True, weight='bold', slant='italic')
+                #self.highlight_text('tag1', 1, 1, 5,'red')
                 self.add_row(item, len_max)
+                #self._ListBox_SearchPatient.itemconfig(0, {'bg': 'red'})
+                bolded = font.Font(weight='bold')  # will use the default font
+                self._ListBox_SearchPatient.config(font=bolded)
+
+
+    #def highlight_text(self, tag_name, lineno, start_char, end_char, bg_color=None, fg_color=None):
+    #    self._ListBox_SearchPatient.tag_add(tag_name, f'{lineno}.{start_char}', f'{lineno}.{end_char}')
+    #    self._ListBox_SearchPatient.tag_config(tag_name, background=bg_color, foreground=fg_color)
 
 
     def callback_when_click_on_found_item(self, event):

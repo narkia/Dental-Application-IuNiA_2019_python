@@ -39,6 +39,14 @@ class Patient:
             cur = con.cursor()
             #cur.execute("SELECT firstname, lastname from patient_table_good3 WHERE firstname LIKE ? OR lastname LIKE ?",(input, input)) #BUN
             #cur.execute("SELECT firstname, lastname from patient_table_good3 WHERE firstname.letter LIKE ? OR lastname.letter LIKE ?", (input, input))
+            charac = " "
+            if charac in input:
+                lista_locala_inputs = input.split(" ")
+                cur.execute("SELECT firstname, lastname from patient_table_good3 WHERE instr(firstname, ?) > 0 OR instr(lastname, ?) > 0", (lista_locala_inputs[0], lista_locala_inputs[1]))
+                rows = cur.fetchall()
+                for patient_local in rows:
+                    patient_local_list.append(patient_local[0] + " " + patient_local[1])
+
             if(input is not ""):
                 cur.execute("SELECT firstname, lastname from patient_table_good3 WHERE instr(firstname, ?) > 0 OR instr(lastname, ?) > 0",(input, input))
                 rows = cur.fetchall()
