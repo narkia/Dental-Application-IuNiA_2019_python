@@ -315,9 +315,9 @@ class Tab_Patient(Frame):
         sv.trace("w", lambda name, index, mode, sv=sv: self.callback_search_when_typing(sv))
         self._textbox_search_patient = tk.Entry(self.labelFrame_SearchPatient, textvariable=sv)
         self._textbox_search_patient.grid(row=0, column=0)
-        self._button_edit_patient = Button(self.labelFrame_SearchPatient, text="Edit patient info", bg="#E3F6CE", fg="blue")
+        self._button_edit_patient = Button(self.labelFrame_SearchPatient, command=self.edit_patient_in_database, text="Edit patient info", bg="#E3F6CE", fg="blue")
         self._button_edit_patient.grid(row=1, column=1)
-        self._button_edit_patient.bind("<Button-1>", self.edit_patient_in_database)
+        #self._button_edit_patient.bind("<Button-1>", self.edit_patient_in_database)
         self._ListBox_SearchPatient = tk.Listbox(self.labelFrame_SearchPatient, width=30, height=10)
         self._ListBox_SearchPatient.grid(row=1, column=0)
         #self._ListBox_SearchPatient.bind('<<ListboxSelect>>', self.callback_when_click_on_found_item)
@@ -325,6 +325,7 @@ class Tab_Patient(Frame):
 
 
     def callback_search_when_typing(self, sv):
+        self._ListBox_SearchPatient.delete(0, END)
         len_max = 0
         input = sv.get()
         patient_local_list = Patient.search_patient_in_database(Patient, input)
@@ -333,7 +334,8 @@ class Tab_Patient(Frame):
                 len_max = len(m)
 
         if not patient_local_list:
-            self._ListBox_SearchPatient.delete(0,END)
+            pass
+            #self._ListBox_SearchPatient.delete(0,END)
         else:
             for item in patient_local_list:
                 self.add_row(item, len_max)
@@ -367,7 +369,7 @@ class Tab_Patient(Frame):
         messagebox.showinfo("Patient Info -->" + str(string_text_selectat), "Name: " + str(lastname) + " " +str(firstname) + "\n" +"Age: " + str(age) + "\n" +"CNP: " + str(cnp) + "\n" +"Adress: " + adress + "\n" + "Occupation: " + str(occupation) + "\n")
 
 
-    def edit_patient_in_database(self, event):
+    def edit_patient_in_database(self):
         cursor_position = self._ListBox_SearchPatient.curselection()
         text_item_ListBox = self._ListBox_SearchPatient.get(cursor_position[0], END)
         string_text_selectat = text_item_ListBox[0]
@@ -381,7 +383,18 @@ class Tab_Patient(Frame):
             rows = cur.fetchall()
         con.close()
 
-        window = tk.Toplevel(self)
+        #window = tk.Toplevel(self)
+        window1 = tk.Toplevel()
+        window1.geometry("300x300+500+200")
+        window1["bg"] = "navy"
+        lb = tk.Label(window1, text="Hello")
+        lb.pack()
+        #window.title("Edit Patient Info -->" + string_text_selectat)
+        #window.("Edit Patient Info -->" + string_text_selectat)
+        #w = tk.Label(window, text="Edit Patient Info -->" + string_text_selectat)
+        #window.geometry("300x150+30+30")
+        #topButton = window.Button(window, text="CLOSE", command=window.destroy)
+        #topButton.pack()
         #window.textbox_1 = tk.Entry(window, width=30).pack(side=tk.LEFT)
         #window.textbox_2 = tk.Entry(window, width=30)
         #window.textbox_1.grid(row=2, col=0)
