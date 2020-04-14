@@ -318,6 +318,8 @@ class Tab_Patient(Frame):
         self._textbox_search_patient.grid(row=0, column=0)
         self._button_edit_patient = Button(self.labelFrame_SearchPatient, command=self.edit_patient_in_database, text="Edit patient info", bg="#E3F6CE", fg="blue")
         self._button_edit_patient.grid(row=1, column=1)
+        self._button_delete_selected_patient = Button(self.labelFrame_SearchPatient, command=self.delete_selected_patient_from_database, text="Delete this patient", bg="#E3F6CE", fg="blue")
+        self._button_delete_selected_patient.grid(row=2, column=1)
         #self._button_edit_patient.bind("<Button-1>", self.edit_patient_in_database)
         self._ListBox_SearchPatient = tk.Listbox(self.labelFrame_SearchPatient, width=30, height=10)
         self._ListBox_SearchPatient.grid(row=1, column=0)
@@ -417,6 +419,22 @@ class Tab_Patient(Frame):
         #window.textbox_1.grid(row=4, col=0)
         #window.textbox_5 = tk.Entry(window, width=30)
         #window.textbox_1.grid(row=5, col=0)
+
+    def delete_selected_patient_from_database(self):
+        cursor_position = self._ListBox_SearchPatient.curselection()
+        print("cursor_position este: ", cursor_position)
+        if cursor_position is ():
+            print("no patient selected in order to be deleted!!")
+        else:
+            text_item_ListBox = self._ListBox_SearchPatient.get(cursor_position[0], END)
+            string_text_selectat = text_item_ListBox[0]
+            list_string_text_selectat = string_text_selectat.split(" ")
+            con = sqlite.connect('test.db')
+            with con:
+                cur = con.cursor()
+                cur.execute("DELETE from patient_table_good3 WHERE firstname LIKE ? AND lastname LIKE ?", (list_string_text_selectat[0], list_string_text_selectat[1]))
+                print("patient deleted --> ", string_text_selectat)
+            con.close()
 
 
     def myfunction(event,canvas):
